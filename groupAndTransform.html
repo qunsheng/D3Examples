@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>D3 example</title>
+    <script type="text/javascript" src="d3.js"></script>
+
+</head>
+<body>
+    <div id="viz"></div>
+    <script type="text/javascript">
+
+	var data = [20, 40, 50, 60]; // this call domain in d3
+	var width = 500;
+	var height = 500;
+	
+	var widthScale = d3.scale.linear()
+    		.domain([0, 60]) // range of original value, min 0, max 60
+    		.range([0, width]); // resulting range, min 0, max 500
+
+	var color = d3.scale.linear()
+    		.domain([0, 60]) // range of original value, min 0, max 60
+    		.range(["red", "blue"]); // resulting range
+    		
+    var axis = d3.svg.axis()
+    				.scale(widthScale)
+    				.ticks(5); // 5 ticks instead of default value 10
+
+    var canvas = d3.select("#viz")
+        .append("svg") // create canvas
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", function(d) { return "translate(50,50)"; });
+              
+    canvas.append("g")
+   		.attr("transform", function(d) { return "translate(0,400)"; })
+		.call(axis);
+		
+	var bars = canvas.selectAll ("rect") // return empty array
+			.data (data) // bind to data
+			.enter () // place hoder for each for every data element
+			.append("rect") // append a rectangle for every place holder
+		    .attr ("width", function (d) // d: each data element
+		    {
+		        return widthScale(d); // use scale function to produce the width
+		     })
+		     .attr("fill", function(d){
+		     	return color(d);
+		     })
+		     .attr("height", 50)
+		     .attr("y", function (d, i) // i: index of each data
+		     {
+		        return i*100;
+		     });  
+    
+    </script>
+</body>
+</html>

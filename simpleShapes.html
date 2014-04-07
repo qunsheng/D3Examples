@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>D3 example</title>
+    <script type="text/javascript" src="d3.js"></script>
+
+</head>
+<body>
+    <div id="viz"></div>
+    <script type="text/javascript">
+    
+    /************************************************************** 
+	 * 
+	 * Create canvas
+	 * 
+	 * When style SVG element, 
+	 * we use attribute method to style the elemnt,
+	 * not use style method
+	 * 
+	 **************************************************************/ 
+
+    var sampleSVG = d3.select("#viz")
+        .append("svg") // create canvas
+        .attr("width", 500)
+        .attr("height", 500);    
+    
+    /************************************************************** 
+	 * 
+	 * Draw a circle
+	 * 
+	 **************************************************************/ 
+
+    sampleSVG.append("circle")
+        .style("stroke", "gray")
+        .style("fill", "white")
+        .attr("r", 50)
+        .attr("cx", 250) // c -- center
+        .attr("cy", 250)
+        .on("mouseover", function(){d3.select(this).style("fill", "aliceblue");})
+        .on("mouseout", function(){d3.select(this).style("fill", "white");});
+    
+        
+    /************************************************************** 
+	 * 
+	 * Draw a rectanglar
+	 * 
+	 **************************************************************/ 
+
+    sampleSVG.append("rect")
+    	.attr("x", 10)                          
+    	.attr("y", 10)
+        .attr("width", 200)
+ 		.attr("height", 100);   
+ 		
+ 		     
+    /************************************************************** 
+	 * 
+	 * Draw a line
+	 * 
+	 **************************************************************/ 
+
+    sampleSVG.append("line")
+        .style("stroke", "green")
+        .style("stroke-width", 10)
+    	.attr("x1", 0)
+    	.attr("y1", 20)
+    	.attr("x2", 400)
+    	.attr("y2", 400);
+    
+    </script>
+</body>
+</html>
