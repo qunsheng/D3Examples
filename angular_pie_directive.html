@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en"  ng-app="angularexample">
+	<head>
+		<meta charset="utf-8">
+		<title>jQuery UI Resizable - Default functionality</title>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-resource.min.js"></script>
+		<script type="text/javascript" src="d3.js"></script>
+
+		<script>
+			var angularExample = angular.module('angularexample', []);
+
+			/* Pie Chart directive with D3.js */
+			angularExample.directive('angularPie', function() {
+			    return {
+			        restrict: 'E',
+			        //transclude: true,
+			        scope: {
+			            data: '='
+			        },
+			        link: function ($scope, element, attrs) {
+			
+			            var vis, arc, pie, arcs;
+			
+			            var w = attrs.width || 380;
+			            var h = attrs.height || 380;
+			            var r = Math.min(w, h) / 2;
+			
+			            $scope.$watch('data', function (newVal, oldVal) {
+			
+			                $('.pie').remove();
+			
+			                if (!newVal) return;
+			
+			                vis = d3.select(element[0])
+			                    .append("svg:svg")
+			                    .attr("width", w)
+			                    .attr("height", h)
+			                    .attr("class", "pie")
+			                    .data([newVal])
+			                    .append("svg:g")
+			                    .attr("transform", "translate(" + r + "," + r + ")");
+			
+			                arc = d3.svg.arc()
+			                    .innerRadius(r - 60)
+			                    .outerRadius(r - 20);
+			
+			                pie = d3.layout.pie()
+			                    .value(function(d) { return 1; });
+			
+			                arcs = vis.selectAll("g.slice")
+			                    .data(pie)
+			                    .enter()
+			                    .append("svg:g")
+			                    .attr("class", function(d, i) {
+			                        return 'slice ' + newVal[i].status.toString().toLowerCase();
+			                    })
+			                    .on("mouseover", function(d, i){
+			
+			                        d3.select(this)
+			                            .transition()
+			                            .duration(50)
+			                            .attr("transform","scale(1.05)");
+			
+			                        $scope.$apply(function () {
+			                            $scope.currentNode = d.data;
+			                        });
+			
+			                    })
+			                    .on("mouseout", function(d, i){
+			
+			                        d3.select(this)
+			                            .transition()
+			                            .duration(100)
+			                            .attr("transform","scale(1)");
+			
+			                    })
+			                    .on("click", function(d, i) {
+			                        window.location = '#/nodes/' + i;
+			                    });
+			
+			                arcs.append("svg:path").attr("d", arc);
+			
+			                $scope.currentNode = newVal[0];
+			
+			            });
+			        }
+			    }
+			});
+
+			angularExample.controller("MainCtrl", [ "$scope",function( $scope) {
+				console.log("MainCtrl...");
+				
+				
+			    // Pie Data
+			    $scope.nodesPie = [];
+			    // angular.forEach($rootScope.nodes, function(value, key) {
+// 			
+			        // $scope.nodesPie.push({
+			            // node: 1,
+			            // nodeName: $rootScope.nodes[key].nodeName,
+			            // index: key,
+			            // status: $rootScope.nodes[key].status
+			        // });
+// 			
+			    // });
+			}]);
+
+		</script>
+	</head>
+	<body ng-controller="MainCtrl">
+
+            <angular-pie data="nodes" width="380" height="380">
+                <div >
+                	Angular Pie
+
+                </div>
+            </aether-pie>
+            
+	</body>
+</html>
